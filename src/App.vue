@@ -38,6 +38,7 @@ export default {
 </script>
 
 <style scoped>
+#app {overflow: hidden;}
 .start-btn {
     margin: 0 auto;
     width: 100px;

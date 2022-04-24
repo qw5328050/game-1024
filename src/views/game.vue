@@ -1,6 +1,5 @@
-
 <template>
-     <div id="game-background" ref="gameBg">
+     <div id="game-background" ref="gameBg" @touchstart.stop.prevent="handleTouchStart" @touchend.stop.prevent="handleTouchEnd">
         <ul>
             <li class="game-item" v-for="(item, index) in bgList" :key="'bg'+index"></li>
         </ul>
@@ -21,6 +20,7 @@ export default {
             bgList: [],
             gameList: [],
             gameStart: false,
+            touchStart: {}
         }
     },
 
@@ -75,6 +75,26 @@ export default {
     activated() {},
     // 方法集合
     methods: {
+        handleTouchmove (e) {
+            console.log(e.touches[0])
+        },
+         handleTouchStart (e) {
+             this.touchStart.screenX = e.changedTouches[0].screenX
+             this.touchStart.screenY = e.changedTouches[0].screenY
+        },
+        handleTouchEnd (e) {
+             let screenX = e.changedTouches[0].screenX
+             let screenY = e.changedTouches[0].screenY
+             let x = screenX - this.touchStart.screenX
+             let y = screenY - this.touchStart.screenY
+             let type = ''
+             if (Math.abs(x) > Math.abs(y)) {
+                 type = x > 0 ? "right" : 'left'
+             } else {
+                 type = y > 0 ? "down" : 'up'
+             }
+             this.move(type)
+        },
         start () {
             this.gameStart = true
             this.initData()
@@ -267,93 +287,99 @@ export default {
 <style>
 #game-background {
     background: #bdada0;
-    width: 440px;
-    height: 440px;
+    width: 352px;
+    height: 352px;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 5px;
+    padding: 4px;
 }
 .game-item {
-    width: 100px;
-    height: 100px;
-    margin: 5px;
+    width: 80px;
+    height: 80px;
+    margin: 4px;
     background: #ccbfb3;
     float: left;
 }
 .start-item {
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
     text-align: center;
     position: absolute;
     color: #fff;
 }
+.start-item.active {
+    animation: move-up 1s;
+}
+@keyframes move-up {
+	to { top: 0;}
+}
 .start-item-1_1 {
-    top: 10px;
-    left: 10px;
+    top: 8px;
+    left: 8px;
 }
 .start-item-1_2 {
-    top: 10px;
-    left: 120px;
+    top: 8px;
+    left: 96px;
 }
 .start-item-1_3 {
-    top: 10px;
-    left: 230px;
+    top: 8px;
+    left: 184px;
 }
 .start-item-1_4 {
-    top: 10px;
-    left: 340px;
+    top: 8px;
+    left: 272px;
 }
 .start-item-2_1 {
-    top: 120px;
-    left: 10px;
+    top: 96px;
+    left: 8px;
 }
 .start-item-2_2 {
-    top: 120px;
-    left: 120px;
+    top: 96px;
+    left: 96px;
 }
 .start-item-2_3 {
-    top: 120px;
-    left: 230px;
+    top: 96px;
+    left: 184px;
 }
 .start-item-2_4 {
-    top: 120px;
-    left: 340px;
+    top: 96px;
+    left: 272px;
 }
 .start-item-3_1 {
-    top: 230px;
-    left: 10px;
+    top: 184px;
+    left: 8px;
 }
 .start-item-3_2 {
-    top: 230px;
-    left: 120px;
+    top: 184px;
+    left: 96px;
 }
 .start-item-3_3 {
-    top: 230px;
-    left: 230px;
+    top: 184px;
+    left: 184px;
 }
 .start-item-3_4 {
-    top: 230px;
-    left: 340px;
+    top: 184px;
+    left: 272px;
 }
 
 .start-item-4_1 {
-    top: 340px;
-    left: 10px;
+    top: 272px;
+    left: 8px;
 }
 .start-item-4_2 {
-    top: 340px;
-    left: 120px;
+    top: 272px;
+    left: 96px;
 }
 .start-item-4_3 {
-    top: 340px;
-    left: 230px;
+    top: 272px;
+    left: 184px;
 }
 .start-item-4_4 {
-    top: 340px;
-    left: 340px;
+    top: 272px;
+    left: 272px;
 }
 
 .game-item_1 {
@@ -378,18 +404,18 @@ export default {
     background: #f77c5f;
 }
 .game-item_128 {
-    background: #f77c5f;
+    background: #f2370b;
 }
 .game-item_256 {
-    background: #f77c5f;
+    background: #9cabff;
 }
 .game-item_512 {
-    background: #f77c5f;
+    background: #6d65ed;
 }
 .game-item_1024 {
-    background: #f77c5f;
+    background: #3d32ec;
 }
 .game-item_2028 {
-    background: #f77c5f;
+    background: #d5ec32;
 }
 </style>
